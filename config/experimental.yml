@@ -2,15 +2,8 @@
   # Enable/disable foreman commands
   :enable_module: true
 
-  # Your foreman server address
-  :host: 'https://localhost/'
+  # Enable condensed help
+  :enable_help: true
 
-  # Credentials. You'll be asked for them interactively if you leave them blank here
-  :username: 'admin'
-  #:password: 'example'
-
-  # Check API documentation cache status on each request
-  #:refresh_cache: false
-
-  # API request timeout. Set to -1 for no timeout
-  #:request_timeout: 120 #seconds
+  # Enable config command
+  :enable_config_command: true

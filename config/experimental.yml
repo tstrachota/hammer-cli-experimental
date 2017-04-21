@@ -3,7 +3,10 @@
   :enable_module: true
 
   # Enable condensed help, highly experimental
-  :enable_help: true
+  :enable_help: false
 
   # Enable config command
   :enable_config_command: true
+
+  # Enable fuzzy matching of subcommands
+  :enable_fuzzy_subcommands: true

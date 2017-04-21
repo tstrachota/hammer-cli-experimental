@@ -10,3 +10,6 @@
 
   # Enable fuzzy matching of subcommands
   :enable_fuzzy_subcommands: true
+
+  # Enable full-help command
+  :enable_full_help_command: true

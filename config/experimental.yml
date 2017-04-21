@@ -2,7 +2,7 @@
   # Enable/disable foreman commands
   :enable_module: true
 
-  # Enable condensed help
+  # Enable condensed help, highly experimental
   :enable_help: true
 
   # Enable config command

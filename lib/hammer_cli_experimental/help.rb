@@ -44,28 +44,50 @@ module HammerCLIExperimental
 
     private
 
+    STATIC_RESOURCES = [
+      'owner',
+      'puppet_class'
+    ]
+
     def collect_squeezable_names(items)
-      @squeezable_names = items.map { |i| i.referenced_resource }.compact.uniq
+      @squeezable_names = items.map do |i|
+        i.referenced_resource if i.respond_to? :referenced_resource
+      end.compact
+      @squeezable_names += STATIC_RESOURCES
+      @squeezable_names = @squeezable_names.uniq
     end
 
     attr_reader :squeezable_names
 
     def squeeze_option_flags(items)
-      help_items = items.map do |i|
-        [i.help[0], i.help[1]] if !is_squeezable?(i)
-      end.compact
-      help_items += squeezable_names.map do |resoruce_name|
-        squeezed_help(select_options_for_resource(resoruce_name, items))
+      help_items = []
+      squeezable_names.each do |resource_name|
+        selected = select_options_for_resource(resource_name, items)
+        next if selected.empty?
+        items -= selected
+        help_items += squeezed_help(selected)
       end
+      help_items += items.map do |i|
+        [i.help[0], i.help[1].capitalize] if !is_squeezable?(i)
+      end.compact
       help_items
     end
 
-    def select_options_for_resource(resoruce_name, options)
-      options.select { |opt| opt.referenced_resource == resoruce_name }
+    def select_options_for_resource(resource_name, options)
+      result = options.select { |opt| opt.referenced_resource == resource_name }
+      if result.count <= 1
+        result = options.select { |opt| opt.switches[0].start_with?("--#{resource_name.gsub('_', '-')}") }
+        result.each { |opt| opt.referenced_resource = resource_name }
+      end
+      result
     end
 
     def squeezed_help(options)
       prefix = common_prefix(options.map { |opt| opt.switches[0] })
+      if prefix == '--'
+        # return help for the original options when there's no common prefix
+        return options.map { |opt| [opt.help[0], opt.help[1]] }
+      end
 
       appendix_items = options.map do |opt|
         opt.switches[0][prefix.length, opt.switches[0].length]
@@ -74,13 +96,20 @@ module HammerCLIExperimental
 
       if !appendix_items.empty?
         appendix = ('[' + appendix_items.join('|') + ']').yellow
+        # length of colors gets calculated wrong, we need padding to workaround the problem
         padding = ' ' * 14
       end
 
       resource_name = options[0].referenced_resource
+      if options.find{|opt| opt.type.end_with?('_IDS')}
+        resource_name = ApipieBindings::Inflector.pluralize(resource_name)
+      end
 
       # TODO: translate the description
-      ["#{prefix}#{appendix} #{resource_name.upcase}", "#{padding}#{resource_name.gsub('_', ' ').capitalize}"]
+      type = resource_name.upcase
+      desc = resource_name.gsub('_', ' ').capitalize
+
+      [["#{prefix}#{appendix} #{type}", "#{padding}#{desc}"]]
     end
 
     def common_prefix(items)
@@ -97,7 +126,7 @@ module HammerCLIExperimental
     end
 
     def is_squeezable?(item)
-      !item.referenced_resource.nil?
+      item.respond_to?(:referenced_resource) && item.referenced_resource
     end
 
     def is_option_list?(items)

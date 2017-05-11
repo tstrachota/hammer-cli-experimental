@@ -6,10 +6,10 @@
   :enable_help: false
 
   # Enable config command
-  :enable_config_command: true
+  :enable_config_command: false
 
   # Enable fuzzy matching of subcommands
-  :enable_fuzzy_subcommands: true
+  :enable_fuzzy_subcommands: false
 
   # Enable full-help command
-  :enable_full_help_command: true
+  :enable_full_help_command: false

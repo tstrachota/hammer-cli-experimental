@@ -74,7 +74,7 @@ module HammerCLIExperimental
     end
 
     def select_options_for_resource(resource_name, options)
-      result = options.select { |opt| opt.referenced_resource == resource_name }
+      result = options.select { |opt| opt.respond_to?(:referenced_resource) && (opt.referenced_resource == resource_name) }
       if result.count <= 1
         result = options.select { |opt| opt.switches[0].start_with?("--#{resource_name.gsub('_', '-')}") }
         result.each { |opt| opt.referenced_resource = resource_name }

@@ -4,6 +4,13 @@ A hammer-cli plugin that contains features not mature enough to be merged into t
 
 If you have a prototype of a feature which is either not completely stable or you're not sure if it's interesting for users and worth finishing, this is the right place to keep such code. The repository is open for innovative ideas. The only rule is that it must be possible to turn the feature off in the configuration.
 
+* [Current features](#current-features)
+  * [config command](#config-command)
+  * [Fuzzy matching of subcommands](#fuzzy-matching-of-subcommands)
+  * [full-help command](#full-help-command)
+  * [Condensed help](#condensed-help)
+* [Installation](#installation)
+* [License](#license)
 
 ## Current features
 
@@ -47,7 +54,7 @@ You can turn it on by following setting:
   :enable_fuzzy_subcommands: true
 ```
 
-### Enable full-help command
+### full-help command
 
 Adds a command for printing help for all hammer commands. It supports either plaintext or markdown format.
 
@@ -76,6 +83,18 @@ You can turn it on by following setting:
 ```yaml
   # Enable condensed help, highly experimental
   :enable_help: true
+```
+
+## Installation
+
+```
+# Install the gem
+gem install hammer_cli_experimental
+# Copy the default config file into your hammer configuration
+cp  $(gem which hammer_cli_experimental | sed 's#lib/.*.rb#config/*#') ~/.hammer/cli.modules.d/
+
+# Now edit the config file and enable experimental options at your will
+vim ~/.hammer/cli.modules.d/experimental.yml
 ```
 
 ## License

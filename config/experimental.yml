@@ -13,3 +13,6 @@
 
   # Enable full-help command
   :enable_full_help_command: false
+
+  # Enable command debugging
+  :enable_debugging: false

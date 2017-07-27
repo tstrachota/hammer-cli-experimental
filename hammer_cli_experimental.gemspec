@@ -24,5 +24,6 @@ EOF
 
   s.add_dependency 'hammer_cli', '>= 0.4.0'
   s.add_dependency 'colorize'
-
+  s.add_dependency 'pry'
+  s.add_dependency 'pry-byebug'
 end
